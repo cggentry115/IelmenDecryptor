@@ -29,3 +29,5 @@ IelmenDecryptor.exe inputDirectory outputDirectory
 Decrypting the game assets by using the built-in JavaScript decryption functions will leave personally identifying info inside of any files that you decrypt.
 
 The decrypted file data from this program is completely clean. You can verify this by using a hex editor.
+
+![Cry about it](https://img.itch.zone/aW1nLzEyMjEwMjY0LnBuZw==/original/6wypHw.png)
