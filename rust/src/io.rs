@@ -11,7 +11,8 @@ pub fn write_file(f_name : &String, dir_out : &String, f_result : Vec<u8>) {
     let mut file = fs::OpenOptions::new()
         .create(true)
         .write(true)
-        .open(&out_file).unwrap();
+        .open(&out_file)
+        .unwrap();
 
     file.write_all(&f_result).unwrap();
 

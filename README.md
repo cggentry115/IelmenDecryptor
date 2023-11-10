@@ -24,6 +24,10 @@ Example:
 IelmenDecryptor.exe inputDirectory outputDirectory
 ```
 
+### Build
+
+Two versions are provided: `rust` and `c#`. To build the `rust` version, run `cargo build --release` in the corresponding directory.For the `c#`, version, use the included solution file.
+
 ### Warning
 
 Decrypting the game assets by using the built-in JavaScript decryption functions will leave personally identifying info inside of any files that you decrypt.

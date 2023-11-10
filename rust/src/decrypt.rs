@@ -18,7 +18,10 @@ pub fn decrypt_folder(dir_path : &String, dir_out : &String) {
         let mut f_name : String = "".to_string();
 
         match entry {
-            Ok(path) => f_name = path.into_os_string().into_string().unwrap(),
+            Ok(path) => f_name = path
+                                 .into_os_string()
+                                 .into_string()
+                                 .unwrap(),
             _ => ()
         }
 
@@ -30,7 +33,12 @@ pub fn decrypt_folder(dir_path : &String, dir_out : &String) {
 }
 
 pub fn decrypt_file(f_path : &String) -> (Vec<u8>, bool) {
-    let strip_path = Path::new(&f_path).file_stem().unwrap().to_str().unwrap().to_uppercase(); 
+    let strip_path = Path::new(&f_path)
+        .file_stem()
+        .unwrap()
+        .to_str()
+        .unwrap()
+        .to_uppercase(); 
     let mut mask_val : u32 = mask(&strip_path);
     let sig_len  : usize = SIGNATURE.len() as usize;
 
