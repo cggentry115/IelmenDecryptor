@@ -2,7 +2,6 @@
 {
     static void Main(string[] args)
     {
-
         if (args.Length == 2)
         {
             string userIn = args[0];
@@ -58,7 +57,6 @@
         Console.WriteLine("All tasks finished. Press any key to exit.");
         Console.ReadKey();
     }
-
     static void DecryptFolder(string dirInput, string dirOutput)
     {
         string[] fileList = GetFiles(dirInput, "*.png|*.ogg|*.json", SearchOption.AllDirectories);
@@ -140,7 +138,6 @@
     {
         return filters.Split('|').SelectMany(filter => Directory.GetFiles(sourceFolder, filter, searchOption)).ToArray();
     }
-
     static string Signature()
     {
         string sig = "00000NEMLEI00000";
