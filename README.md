@@ -14,14 +14,14 @@ Place the program in the main directory that contains `game.exe` and run it from
 
 Arguments:
 
-`inputDirectory`: Specify the input directory. It will traverse all folders in the directory recursively.
+`inputDirectory`: Specify the input directory or file. If directory, it will traverse all folders in the directory recursively.
 
 `outputDirectory`: Specify the output directory. You must pass both arguments at once.
 
 Example:
 
 ```
-IelmenDecryptor.exe inputDirectory outputDirectory
+ielmendecryptor.exe inputDirectory outputDirectory
 ```
 
 ### Build
