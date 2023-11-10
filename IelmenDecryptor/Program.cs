@@ -11,14 +11,22 @@
             {
                 byte[] rawData = File.ReadAllBytes(userIn);
                 byte[] decryptedFile = DecryptFile(rawData, userIn);
-                string decryptedFilename = dirOutput + @"\" + Path.GetFileName(userIn);
-                string? directoryToCreate = Path.GetDirectoryName(decryptedFilename);
-                if (directoryToCreate != null)
+                if (decryptedFile.Length == 1)
                 {
-                    Directory.CreateDirectory(directoryToCreate);
+                    Console.WriteLine("Decoded signature doesn't match file header! Is the key wrong or the input file not encrypted?");
+                    Console.WriteLine("Decryption aborted. File was NOT decrypted: " + userIn);
                 }
-                File.WriteAllBytes(decryptedFilename, decryptedFile);
-                Console.WriteLine("Single file decrypted and saved to: " + decryptedFilename);
+                else
+                {
+                    string decryptedFilename = dirOutput + @"\" + Path.GetFileName(userIn);
+                    string? directoryToCreate = Path.GetDirectoryName(decryptedFilename);
+                    if (directoryToCreate != null)
+                    {
+                        Directory.CreateDirectory(directoryToCreate);
+                    }
+                    File.WriteAllBytes(decryptedFilename, decryptedFile);
+                    Console.WriteLine("Single file decrypted and saved to: " + decryptedFilename);
+                }
             }
             else if (Directory.Exists(userIn))
             {
@@ -60,7 +68,7 @@
             byte[] decryptedFile = DecryptFile(rawData, f);
             if (decryptedFile.Length == 1)
             {
-                Console.WriteLine("Decoded signature doesn't match file header! Is the key wrong?");
+                Console.WriteLine("Decoded signature doesn't match file header! Is the key wrong or the input file not encrypted?");
                 Console.WriteLine("Decryption aborted. File was NOT decrypted: " + f);
             }
             else
