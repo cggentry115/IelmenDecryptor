@@ -29,6 +29,8 @@ fn main() {
         in_path = args[1].to_owned();
         out_path = args[2].to_owned();
     }
+
+    let meta_in = metadata(Path::new(&in_path)).unwrap();
     
     let in_exist = Path::new(&in_path).exists();
     if !in_exist {
@@ -42,6 +44,18 @@ fn main() {
 
         std::process::exit(-1);
     }
+    else {
+        if meta_in.is_dir() {
+            if args.len() == 1 {
+                let game_file = in_path.to_owned() + "/Game.exe";
+                let in_game_dir : bool = Path::new(&game_file).exists();
+                if !in_game_dir {
+                    println!("non-game directory detected");
+                    std::process::exit(-1);
+                }
+            }
+        }
+    }
 
     let out_exist = Path::new(&out_path).exists();
     if !out_exist {
@@ -53,8 +67,6 @@ fn main() {
             std::process::exit(-1);
         }
     }
-
-    let meta_in = metadata(Path::new(&in_path)).unwrap();
 
     if meta_in.is_dir() {
         decrypt_folder(&in_path, &out_path);

@@ -7,3 +7,6 @@ edition = "2021"
 
 [dependencies]
 glob = "0.3.1"
+
+[profile.release]
+strip = true
