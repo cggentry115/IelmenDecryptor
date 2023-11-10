@@ -1,7 +1,7 @@
 use glob::glob;
 use super::mask::*;
+use super::io::*;
 use std::fs;
-use std::io::Write;
 use std::path::Path;
 
 static SIGNATURE : &str = "00000NEMLEI00000";
@@ -10,12 +10,10 @@ static SIGNATURE : &str = "00000NEMLEI00000";
 
 pub fn decrypt_folder(dir_path : &String, dir_out : &String) {
     let glob_str : String = dir_path.to_owned() + "/**/";
-    //println!("{}", glob_str);
     
     for entry in glob(&(glob_str.to_owned() + "img/*/*.png")).unwrap()
                 .chain(glob(&(glob_str.to_owned() + "data/*.json")).unwrap())
                 .chain(glob(&(glob_str.to_owned() + "audio/*/*.ogg")).unwrap()) {
-        
 
         let mut f_name : String = "".to_string();
 
@@ -24,35 +22,14 @@ pub fn decrypt_folder(dir_path : &String, dir_out : &String) {
             _ => ()
         }
 
-        let f_result : Vec<u8> = decrypt_file(&f_name);
-
-        if f_result.len() == 1 {
-            println!("Decoded signature doesn't match file header! Is the key wrong or the input file not encrypted?");
-            println!("Decryption aborted. File was NOT decrypted: {:}", f_name);
+        let (f_result, f_flag) = decrypt_file(&f_name);
+        if !f_flag {
+            write_file(&f_name, dir_out, f_result);
         }
-
-
-        let pos = f_name.rfind("www").unwrap();
-        let out_file = dir_out.to_owned() + "/" + &f_name[pos..];
-        println!("{} : {}", out_file, f_result.len());
-
-        let path = std::path::Path::new(&out_file).parent().unwrap();
-        fs::create_dir_all(path).unwrap();
-
-        let mut file = fs::OpenOptions::new()
-            .create(true)
-            .write(true)
-            .open(out_file).unwrap();
-
-        file.write_all(&f_result).unwrap();
-
-
-
-        break;
     }
 }
 
-pub fn decrypt_file(f_path : &String) -> Vec<u8> {
+pub fn decrypt_file(f_path : &String) -> (Vec<u8>, bool) {
     let strip_path = Path::new(&f_path).file_stem().unwrap().to_str().unwrap().to_uppercase(); 
     let mut mask_val : u32 = mask(&strip_path);
     let sig_len  : usize = SIGNATURE.len() as usize;
@@ -69,7 +46,7 @@ pub fn decrypt_file(f_path : &String) -> Vec<u8> {
     }
 
     if decoded_chars != sliced_input {
-        return vec![0];
+        return (vec![0], true);
     }
     
     let mut rem_data : Vec<u8> = raw_data[sig_len+1..].to_vec();
@@ -87,5 +64,12 @@ pub fn decrypt_file(f_path : &String) -> Vec<u8> {
         mask_val = (mask_val << 1) ^ temp as u32;
     }
 
-    return rem_data;
+    let mut f_flag : bool = false;
+    if rem_data.len() == 1 {
+        println!("Decoded signature doesn't match file header! Is the key wrong or the input file not encrypted?");
+        println!("Decryption aborted. File was NOT decrypted: {:}", f_path);
+        f_flag = true;
+    }
+
+    return (rem_data, f_flag);
 }
